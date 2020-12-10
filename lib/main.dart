@@ -56,11 +56,10 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter++;
     });
+  }
 
-    final googleSignIn =
-        signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.DriveScope]);
-    final signIn.GoogleSignInAccount account = await googleSignIn.signIn();
-    print("User account $account");
+  void _signInWithGoogle() {
+    log("google");
   }
 
   @override
@@ -97,9 +96,19 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'The button has been pressed this amount of times:',
-            ),
+            Container(
+                margin: const EdgeInsets.all(6),
+                child: RaisedButton(
+                    onPressed: _signInWithGoogle,
+                    color: Colors.blue,
+                    padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                    child: Text(
+                      "Sign in with google",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ))),
+            TextButton(
+                onPressed: _signInWithGoogle,
+                child: Text("Go to locally saved programs")),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
