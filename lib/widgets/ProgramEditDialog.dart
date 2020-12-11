@@ -7,9 +7,14 @@ class ProgramEditDialog extends StatelessWidget {
   final ProgramObject program;
   final Function deleteCallback;
   final Function editCallback;
+  final List<String> platforms;
 
   ProgramEditDialog(
-      {Key key, @required this.program, this.editCallback, this.deleteCallback})
+      {Key key,
+      @required this.program,
+      this.editCallback,
+      this.deleteCallback,
+      @required this.platforms})
       : super(key: key);
 
   @override
@@ -32,7 +37,7 @@ class ProgramEditDialog extends StatelessWidget {
                   itemCount: program.commands.length,
                   shrinkWrap: true,
                   itemBuilder: (BuildContext buildContext, int index) {
-                    return CommandListItem();
+                    return CommandListItem(platforms: platforms);
                   }),
               height: 400,
               width: 400,

@@ -7,8 +7,7 @@ import 'package:computer_program_sync/widgets/textInputDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/chat/v1.dart';
 import 'dart:io';
-import 'package:computer_program_sync/programListenerScreenFactories.dart'
-    as mFactory;
+import 'package:computer_program_sync/widgetFactories.dart' as mFactory;
 
 class ProgramListerScreen extends StatefulWidget {
   ProgramListerScreen({Key key}) : super(key: key);
@@ -96,6 +95,7 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
             context: context,
             builder: (BuildContext buildContext) => ProgramEditDialog(
                   program: program,
+                  platforms: allAddedPlatforms,
                 ));
       },
       child: Text(text),
