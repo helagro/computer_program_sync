@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Widget actionButtonFactory(IconData icon, String tooltip) {
   return SizedBox(
@@ -10,16 +11,18 @@ Widget actionButtonFactory(IconData icon, String tooltip) {
   );
 }
 
-Widget createSelectedPlatformsColumnItem(String text) {
-  return SizedBox(
-      width: 200,
+Widget createSelectedPlatformsColumnItem(List<String> visiblePlatforms,
+    int index, Function removePlatformFromSelection) {
+  String text = visiblePlatforms[index];
+
+  return Container(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Row(children: <Widget>[
-        SizedBox(width: 80, child: Text(text)),
-        SizedBox(
-          width: 20,
+        Center(child: Text(text)),
+        Center(
           child: IconButton(
             icon: Icon(Icons.close),
-            onPressed: () {},
+            onPressed: () => removePlatformFromSelection(index),
           ),
         )
       ]));

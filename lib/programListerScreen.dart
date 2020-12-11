@@ -38,23 +38,20 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
                       shrinkWrap: true,
                       itemBuilder: (BuildContext buildContext, int index) {
                         return mFactory.createSelectedPlatformsColumnItem(
-                            visiblePlatforms[index]);
+                            visiblePlatforms,
+                            index,
+                            removePlatformFromSelection);
                       })),
               SizedBox(
                 child: DropdownButton(
                   items: mFactory
                       .createPlatformsDropdownMenuItems(allAddedPlatforms),
-                  onChanged: (value) {
-                    setState(() {
-                      visiblePlatforms.add(allAddedPlatforms[value]);
-                      print(visiblePlatforms);
-                    });
-                  },
+                  onChanged: (value) => handleAddNewPlatformToSelection(value),
                 ),
               )
             ],
           ),
-          height: 70,
+          height: 80,
         ),
         Expanded(
           child: ListView.builder(
@@ -74,17 +71,35 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
     );
   }
 
-  void _addItem() {
-    setState(() {
-      listItems.add("I am added from btn");
-    });
-  }
-
   Widget _listItemFactory(String text) {
     return FlatButton(
       onPressed: _addItem,
       child: Text(text),
       padding: const EdgeInsets.all(20),
     );
+  }
+
+  void _addItem() {
+    setState(() {
+      listItems.add("I am added from btn");
+    });
+  }
+
+  void handleAddNewPlatformToSelection(int index) {
+    String platform = allAddedPlatforms[index];
+    if (visiblePlatforms.contains(platform)) {
+      print(visiblePlatforms);
+      return;
+    }
+
+    setState(() {
+      visiblePlatforms.add(platform);
+    });
+  }
+
+  void removePlatformFromSelection(int index) {
+    setState(() {
+      visiblePlatforms.removeAt(index);
+    });
   }
 }
