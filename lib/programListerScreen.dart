@@ -1,6 +1,16 @@
+import 'package:computer_program_sync/main.dart';
 import 'package:flutter/material.dart';
 
-class ProgramListerScreen extends StatelessWidget {
+class ProgramListerScreen extends StatefulWidget {
+  ProgramListerScreen({Key key}) : super(key: key);
+
+  @override
+  _ProgramListerScreenState createState() => _ProgramListerScreenState();
+}
+
+class _ProgramListerScreenState extends State<ProgramListerScreen> {
+  final List<String> listItems = <String>["some", "example", "text"];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,19 +22,23 @@ class ProgramListerScreen extends StatelessWidget {
           _actionButtonFactory(Icons.play_arrow, "Run"),
         ],
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Navigate back to first route when tapped.
-          },
-          child: Text('Go back!'),
-        ),
-      ),
+      body: ListView.builder(
+          itemCount: listItems.length,
+          itemBuilder: (BuildContext buildContext, int index) {
+            return _listItemFactory(listItems[index]);
+          }),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add program',
         child: Icon(Icons.add),
+        onPressed: addItem,
       ),
     );
+  }
+
+  void addItem() {
+    setState(() {
+      listItems.add("I am added from btn");
+    });
   }
 }
 
@@ -36,4 +50,8 @@ Widget _actionButtonFactory(IconData icon, String tooltip) {
       message: tooltip,
     ),
   );
+}
+
+Widget _listItemFactory(String text) {
+  return RaisedButton(child: Text(text));
 }
