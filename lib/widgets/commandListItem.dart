@@ -1,28 +1,31 @@
+import 'package:computer_program_sync/programObject.dart';
 import 'package:flutter/material.dart';
 import '../widgetFactories.dart';
 
 class CommandListItem extends StatefulWidget {
   final List<String> platforms;
+  final CommandObject command;
 
-  CommandListItem({Key key, this.platforms}) : super(key: key);
+  CommandListItem({Key key, this.platforms, this.command}) : super(key: key);
 
   @override
   _CommandListItemState createState() =>
-      _CommandListItemState(platforms: platforms);
+      _CommandListItemState(platforms: platforms, command: command);
 }
 
 class _CommandListItemState extends State<CommandListItem> {
-  _CommandListItemState({List<String> platforms}) {
+  _CommandListItemState({List<String> platforms, this.command}) {
     platformsWidgets = createPlatformsDropdownMenuItems(platforms);
   }
 
   List<DropdownMenuItem> platformsWidgets = [];
+  final CommandObject command;
   final TextEditingController textEditingController = TextEditingController();
   int selectedItem = 0;
 
   @override
   Widget build(BuildContext context) {
-    textEditingController.text = "dawi";
+    textEditingController.text = command.command;
 
     return Row(children: [
       DropdownButton(

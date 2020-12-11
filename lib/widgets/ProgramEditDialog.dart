@@ -37,7 +37,8 @@ class ProgramEditDialog extends StatelessWidget {
                   itemCount: program.commands.length,
                   shrinkWrap: true,
                   itemBuilder: (BuildContext buildContext, int index) {
-                    return CommandListItem(platforms: platforms);
+                    return CommandListItem(
+                        platforms: platforms, command: program.commands[index]);
                   }),
               height: 400,
               width: 400,
