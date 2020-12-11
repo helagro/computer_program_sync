@@ -1,6 +1,10 @@
 import 'package:computer_program_sync/main.dart';
+import 'package:computer_program_sync/widgets/ProgramEditDialog.dart';
+import 'package:computer_program_sync/widgets/actionbutton.dart';
+import 'package:computer_program_sync/widgets/tagWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/chat/v1.dart';
+import 'dart:io';
 import 'package:computer_program_sync/programListenerScreenFactories.dart'
     as mFactory;
 
@@ -22,12 +26,13 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
       appBar: AppBar(
         title: Text("Added programs"),
         actions: <Widget>[
-          mFactory.actionButtonFactory(Icons.replay, "Reload"),
-          mFactory.actionButtonFactory(Icons.save, "Save"),
-          mFactory.actionButtonFactory(Icons.play_arrow, "Run"),
+          ActionButton(icon: Icons.replay, toolTip: "Reload"),
+          ActionButton(icon: Icons.save, toolTip: "Save"),
+          ActionButton(icon: Icons.play_arrow, toolTip: "Run"),
         ],
       ),
       body: Column(children: [
+        //ANCHOR filter
         SizedBox(
           child: Row(
             children: [
@@ -37,10 +42,10 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
                       itemCount: visiblePlatforms.length,
                       shrinkWrap: true,
                       itemBuilder: (BuildContext buildContext, int index) {
-                        return mFactory.createSelectedPlatformsColumnItem(
-                            visiblePlatforms,
-                            index,
-                            removePlatformFromSelection);
+                        return TagWidget(
+                            text: visiblePlatforms[index],
+                            index: index,
+                            removeBtnCallback: removePlatformFromSelection);
                       })),
               SizedBox(
                 child: DropdownButton(
@@ -53,6 +58,7 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
           ),
           height: 80,
         ),
+        //ANCHOR listview
         Expanded(
           child: ListView.builder(
               scrollDirection: Axis.vertical,
@@ -73,7 +79,11 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
 
   Widget _listItemFactory(String text) {
     return FlatButton(
-      onPressed: _addItem,
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext buildContext) => ProgramEditDialog());
+      },
       child: Text(text),
       padding: const EdgeInsets.all(20),
     );
@@ -83,6 +93,7 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
     setState(() {
       listItems.add("I am added from btn");
     });
+    //Process.run('touch', ['/home/h/github/localWebsites/hi.txt']);
   }
 
   void handleAddNewPlatformToSelection(int index) {
