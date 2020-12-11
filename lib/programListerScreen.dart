@@ -2,6 +2,7 @@ import 'package:computer_program_sync/main.dart';
 import 'package:computer_program_sync/widgets/ProgramEditDialog.dart';
 import 'package:computer_program_sync/widgets/actionbutton.dart';
 import 'package:computer_program_sync/widgets/tagWidget.dart';
+import 'package:computer_program_sync/widgets/textInputDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/chat/v1.dart';
 import 'dart:io';
@@ -53,6 +54,16 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
                       .createPlatformsDropdownMenuItems(allAddedPlatforms),
                   onChanged: (value) => handleAddNewPlatformToSelection(value),
                 ),
+              ),
+              ActionButton(
+                icon: Icons.add,
+                toolTip: "Add platform",
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext buildContext) =>
+                          TextInputDialog(onDone: addNewPlatform));
+                },
               )
             ],
           ),
@@ -94,6 +105,12 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
       listItems.add("I am added from btn");
     });
     //Process.run('touch', ['/home/h/github/localWebsites/hi.txt']);
+  }
+
+  void addNewPlatform(String platformName) {
+    setState(() {
+      allAddedPlatforms.add(platformName);
+    });
   }
 
   void handleAddNewPlatformToSelection(int index) {
