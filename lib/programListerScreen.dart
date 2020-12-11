@@ -1,5 +1,8 @@
 import 'package:computer_program_sync/main.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/chat/v1.dart';
+import 'package:computer_program_sync/programListenerScreenFactories.dart'
+    as mFactory;
 
 class ProgramListerScreen extends StatefulWidget {
   ProgramListerScreen({Key key}) : super(key: key);
@@ -9,6 +12,8 @@ class ProgramListerScreen extends StatefulWidget {
 }
 
 class _ProgramListerScreenState extends State<ProgramListerScreen> {
+  final List<String> allAddedPlatforms = <String>["Windows", "MacOS", "Linux"];
+  final List<String> visiblePlatforms = <String>[];
   final List<String> listItems = <String>["some", "example", "text"];
 
   @override
@@ -17,41 +22,69 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
       appBar: AppBar(
         title: Text("Added programs"),
         actions: <Widget>[
-          _actionButtonFactory(Icons.replay, "Reload"),
-          _actionButtonFactory(Icons.save, "Save"),
-          _actionButtonFactory(Icons.play_arrow, "Run"),
+          mFactory.actionButtonFactory(Icons.replay, "Reload"),
+          mFactory.actionButtonFactory(Icons.save, "Save"),
+          mFactory.actionButtonFactory(Icons.play_arrow, "Run"),
         ],
       ),
-      body: ListView.builder(
-          itemCount: listItems.length,
-          itemBuilder: (BuildContext buildContext, int index) {
-            return _listItemFactory(listItems[index]);
-          }),
+      body: Column(children: [
+        SizedBox(
+          child: Row(
+            children: [
+              Expanded(
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: visiblePlatforms.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext buildContext, int index) {
+                        return mFactory.createSelectedPlatformsColumnItem(
+                            visiblePlatforms[index]);
+                      })),
+              SizedBox(
+                child: DropdownButton(
+                  items: mFactory
+                      .createPlatformsDropdownMenuItems(allAddedPlatforms),
+                  onChanged: (value) {
+                    setState(() {
+                      visiblePlatforms.add(allAddedPlatforms[value]);
+                      print(visiblePlatforms);
+                    });
+                  },
+                ),
+              )
+            ],
+          ),
+          height: 70,
+        ),
+        Expanded(
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: listItems.length,
+              itemBuilder: (BuildContext buildContext, int index) {
+                return _listItemFactory(listItems[index]);
+              }),
+        )
+      ]),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add program',
         child: Icon(Icons.add),
-        onPressed: addItem,
+        onPressed: _addItem,
       ),
     );
   }
 
-  void addItem() {
+  void _addItem() {
     setState(() {
       listItems.add("I am added from btn");
     });
   }
-}
 
-Widget _actionButtonFactory(IconData icon, String tooltip) {
-  return SizedBox(
-    width: 50,
-    child: Tooltip(
-      child: FlatButton(child: Icon(icon)),
-      message: tooltip,
-    ),
-  );
-}
-
-Widget _listItemFactory(String text) {
-  return RaisedButton(child: Text(text));
+  Widget _listItemFactory(String text) {
+    return FlatButton(
+      onPressed: _addItem,
+      child: Text(text),
+      padding: const EdgeInsets.all(20),
+    );
+  }
 }

@@ -54,14 +54,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  Future<void> _incrementCounter() async {
-    setState(() {
-      _counter++;
-    });
-  }
-
   void _goTo(Object object) {
     Navigator.push(
       context,
@@ -119,18 +111,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   "Go to locally saved programs",
                   style: TextStyle(color: Colors.grey),
                 )),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
