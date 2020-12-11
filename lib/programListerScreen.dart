@@ -1,4 +1,5 @@
 import 'package:computer_program_sync/main.dart';
+import 'package:computer_program_sync/programObject.dart';
 import 'package:computer_program_sync/widgets/ProgramEditDialog.dart';
 import 'package:computer_program_sync/widgets/actionbutton.dart';
 import 'package:computer_program_sync/widgets/tagWidget.dart';
@@ -48,12 +49,10 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
                             index: index,
                             removeBtnCallback: removePlatformFromSelection);
                       })),
-              SizedBox(
-                child: DropdownButton(
-                  items: mFactory
-                      .createPlatformsDropdownMenuItems(allAddedPlatforms),
-                  onChanged: (value) => handleAddNewPlatformToSelection(value),
-                ),
+              DropdownButton(
+                items: mFactory
+                    .createPlatformsDropdownMenuItems(allAddedPlatforms),
+                onChanged: (value) => handleAddNewPlatformToSelection(value),
               ),
               ActionButton(
                 icon: Icons.add,
@@ -91,9 +90,13 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
   Widget _listItemFactory(String text) {
     return FlatButton(
       onPressed: () {
+        CommandObject command = CommandObject("Linux", "touch test.txt");
+        ProgramObject program = ProgramObject("Test", [command]);
         showDialog(
             context: context,
-            builder: (BuildContext buildContext) => ProgramEditDialog());
+            builder: (BuildContext buildContext) => ProgramEditDialog(
+                  program: program,
+                ));
       },
       child: Text(text),
       padding: const EdgeInsets.all(20),

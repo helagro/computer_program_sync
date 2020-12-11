@@ -1,11 +1,13 @@
 class ProgramObject {
   String name;
-  List<Command> commands;
+  List<CommandObject> commands;
 
   ProgramObject(this.name, this.commands);
 }
 
-class Command {
+class CommandObject {
   String platform;
   String command;
+
+  CommandObject(this.platform, this.command);
 }
