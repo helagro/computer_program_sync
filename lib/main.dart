@@ -1,7 +1,10 @@
+import 'package:computer_program_sync/programListerScreen.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:google_sign_in/google_sign_in.dart' as signIn;
+
+import 'googleLoginScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,6 +29,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -58,8 +62,11 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _signInWithGoogle() {
-    log("google");
+  void _goTo(Object object) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => object),
+    );
   }
 
   @override
@@ -97,9 +104,9 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-                margin: const EdgeInsets.all(6),
+                margin: const EdgeInsets.all(3),
                 child: RaisedButton(
-                    onPressed: _signInWithGoogle,
+                    onPressed: () => _goTo(GoogleLoginScreen()),
                     color: Colors.blue,
                     padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
                     child: Text(
@@ -107,8 +114,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ))),
             TextButton(
-                onPressed: _signInWithGoogle,
-                child: Text("Go to locally saved programs")),
+                onPressed: () => _goTo(ProgramListerScreen()),
+                child: Text(
+                  "Go to locally saved programs",
+                  style: TextStyle(color: Colors.grey),
+                )),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
