@@ -16,6 +16,7 @@ class CommandListItem extends StatefulWidget {
 class _CommandListItemState extends State<CommandListItem> {
   _CommandListItemState({List<String> platforms, this.command}) {
     platformsWidgets = createPlatformsDropdownMenuItems(platforms);
+    selectedItem = platforms.indexOf(command.platform);
   }
 
   List<DropdownMenuItem> platformsWidgets = [];
@@ -35,7 +36,7 @@ class _CommandListItemState extends State<CommandListItem> {
             selectedItem = value;
           })
         },
-        items: List<DropdownMenuItem>.from(platformsWidgets),
+        items: platformsWidgets,
       ),
       SizedBox(
         child: TextField(controller: textEditingController),
