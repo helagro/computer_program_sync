@@ -33,7 +33,7 @@ class ProgramEditDialog extends StatelessWidget {
             ),
             SizedBox(
               child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
+                  scrollDirection: Axis.vertical,
                   itemCount: program.commands.length,
                   shrinkWrap: true,
                   itemBuilder: (BuildContext buildContext, int index) {

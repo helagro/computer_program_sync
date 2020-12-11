@@ -89,8 +89,10 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
   Widget _listItemFactory(String text) {
     return FlatButton(
       onPressed: () {
-        CommandObject command = CommandObject("Windows", "touch test.txt");
-        ProgramObject program = ProgramObject("Test", [command]);
+        ProgramObject program = ProgramObject("Test", [
+          CommandObject("Windows", "touch test.txt"),
+          CommandObject("Linux", "touch test2.txt")
+        ]);
         showDialog(
             context: context,
             builder: (BuildContext buildContext) => ProgramEditDialog(
