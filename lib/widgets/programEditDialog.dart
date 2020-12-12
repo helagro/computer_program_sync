@@ -1,4 +1,4 @@
-import 'package:computer_program_sync/programObject.dart';
+import 'package:computer_program_sync/non-graphics/programObject.dart';
 import 'package:computer_program_sync/widgets/actionbutton.dart';
 import 'package:computer_program_sync/widgets/commandListItem.dart';
 

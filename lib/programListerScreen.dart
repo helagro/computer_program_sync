@@ -1,7 +1,9 @@
 import 'package:computer_program_sync/main.dart';
-import 'package:computer_program_sync/programObject.dart';
-import 'package:computer_program_sync/widgets/ProgramEditDialog.dart';
+import 'package:computer_program_sync/non-graphics/commandHelper.dart';
+import 'package:computer_program_sync/non-graphics/programObject.dart';
+import 'package:computer_program_sync/widgets/programEditDialog.dart';
 import 'package:computer_program_sync/widgets/actionbutton.dart';
+import 'package:computer_program_sync/widgets/programListItem.dart';
 import 'package:computer_program_sync/widgets/tagWidget.dart';
 import 'package:computer_program_sync/widgets/textInputDialog.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +22,12 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
   final List<String> allAddedPlatforms = <String>["Windows", "MacOS", "Linux"];
   final List<String> visiblePlatforms = <String>[];
   final List<ProgramObject> programs = <ProgramObject>[];
+  List<ProgramObject> visiblePrograms;
 
   @override
   Widget build(BuildContext context) {
+    visiblePrograms = getVisiblePrograms(programs, visiblePlatforms);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Added programs"),
@@ -32,7 +37,7 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
           ActionButton(
             icon: Icons.play_arrow,
             toolTip: "Run",
-            onPressed: () => runCommands(programs, visiblePlatforms),
+            onPressed: () => runCommands(visiblePrograms, visiblePlatforms),
           ),
         ],
       ),
@@ -76,9 +81,13 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
           child: ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: programs.length,
+              itemCount: visiblePrograms.length,
               itemBuilder: (BuildContext buildContext, int index) {
-                return _listItemFactory(programs[index]);
+                return ProgramListItem(
+                  program: visiblePrograms[index],
+                  allAddedPlatforms: allAddedPlatforms,
+                  editCallback: refreshPrograms,
+                );
               }),
         )
       ]),
@@ -87,22 +96,6 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
         child: Icon(Icons.add),
         onPressed: _addProgram,
       ),
-    );
-  }
-
-  Widget _listItemFactory(ProgramObject programObject) {
-    return FlatButton(
-      onPressed: () {
-        showDialog(
-            context: context,
-            builder: (BuildContext buildContext) => ProgramEditDialog(
-                  program: programObject,
-                  platforms: allAddedPlatforms,
-                  editCallback: refreshPrograms,
-                ));
-      },
-      child: Text(programObject.name),
-      padding: const EdgeInsets.all(20),
     );
   }
 
@@ -141,26 +134,22 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
       visiblePlatforms.removeAt(index);
     });
   }
-}
 
-void runCommands(
-    List<ProgramObject> programObjects, List<String> selectedPlatforms) {
-  for (ProgramObject programObject in programObjects) {
-    runMatchingCommandsInProgram(selectedPlatforms, programObject);
-  }
-}
+  List<ProgramObject> getVisiblePrograms(
+      List<ProgramObject> programs, List<String> visiblePlatforms) {
+    List<ProgramObject> visiblePrograms = <ProgramObject>[];
 
-void runMatchingCommandsInProgram(
-    List<String> selectedPlatforms, ProgramObject programObject) {
-  for (CommandObject commandObject in programObject.commands) {
-    if (selectedPlatforms.contains(commandObject.platform)) {
-      runCommand(commandObject.command);
+    if (visiblePlatforms.isEmpty) return programs;
+
+    for (ProgramObject program in programs) {
+      for (CommandObject commandObject in program.commands) {
+        if (visiblePlatforms.contains(commandObject.platform)) {
+          visiblePrograms.add(program);
+          break;
+        }
+      }
     }
-  }
-}
 
-void runCommand(String command) {
-  List<String> commands = command.split(" ");
-  print(commands);
-  Process.run(commands[0], commands.sublist(1, commands.length));
+    return visiblePrograms;
+  }
 }
