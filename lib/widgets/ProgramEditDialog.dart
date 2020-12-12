@@ -24,7 +24,7 @@ class ProgramEditDialog extends StatelessWidget {
     nameEditingController.text = program.name;
 
     return AlertDialog(
-      title: Text("Edit program"),
+      title: Center(child: Text("Edit program")),
       actions: [
         Column(
           mainAxisAlignment: MainAxisAlignment.center,

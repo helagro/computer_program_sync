@@ -21,8 +21,6 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
   final List<String> visiblePlatforms = <String>[];
   final List<ProgramObject> programs = <ProgramObject>[];
 
-  _ProgramListerScreenState() {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
