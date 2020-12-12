@@ -19,7 +19,16 @@ class ProgramListerScreen extends StatefulWidget {
 class _ProgramListerScreenState extends State<ProgramListerScreen> {
   final List<String> allAddedPlatforms = <String>["Windows", "MacOS", "Linux"];
   final List<String> visiblePlatforms = <String>[];
-  final List<String> listItems = <String>["some", "example", "text"];
+  final List<ProgramObject> programs = <ProgramObject>[];
+
+  _ProgramListerScreenState() {
+    ProgramObject program = ProgramObject("TestProgram", [
+      CommandObject("Windows", "touch /home/h/github/localWebsites/test.txt"),
+      CommandObject("Linux", "touch /home/h/github/localWebsites/test2.txt")
+    ]);
+
+    programs.add(program);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +38,11 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
         actions: <Widget>[
           ActionButton(icon: Icons.replay, toolTip: "Reload"),
           ActionButton(icon: Icons.save, toolTip: "Save"),
-          ActionButton(icon: Icons.play_arrow, toolTip: "Run"),
+          ActionButton(
+            icon: Icons.play_arrow,
+            toolTip: "Run",
+            onPressed: () => runCommands(programs, visiblePlatforms),
+          ),
         ],
       ),
       body: Column(children: [
@@ -72,9 +85,9 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
           child: ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: listItems.length,
+              itemCount: programs.length,
               itemBuilder: (BuildContext buildContext, int index) {
-                return _listItemFactory(listItems[index]);
+                return _listItemFactory(programs[index]);
               }),
         )
       ]),
@@ -86,12 +99,13 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
     );
   }
 
-  Widget _listItemFactory(String text) {
+  Widget _listItemFactory(ProgramObject programObject) {
     return FlatButton(
       onPressed: () {
         ProgramObject program = ProgramObject("Test", [
-          CommandObject("Windows", "touch test.txt"),
-          CommandObject("Linux", "touch test2.txt")
+          CommandObject(
+              "Windows", "touch /home/h/github/localWebsites/test.txt"),
+          CommandObject("Linux", "touch /home/h/github/localWebsites/test2.txt")
         ]);
         showDialog(
             context: context,
@@ -100,14 +114,14 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
                   platforms: allAddedPlatforms,
                 ));
       },
-      child: Text(text),
+      child: Text(programObject.name),
       padding: const EdgeInsets.all(20),
     );
   }
 
   void _addItem() {
     setState(() {
-      listItems.add("I am added from btn");
+      //programs.add("I am added from btn");
     });
     //Process.run('touch', ['/home/h/github/localWebsites/hi.txt']);
   }
@@ -135,4 +149,27 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
       visiblePlatforms.removeAt(index);
     });
   }
+}
+
+void runCommands(
+    List<ProgramObject> programObjects, List<String> selectedPlatforms) {
+  print("hi" + programObjects.length.toString());
+  for (ProgramObject programObject in programObjects) {
+    runMatchingCommandsInProgram(selectedPlatforms, programObject);
+  }
+}
+
+void runMatchingCommandsInProgram(
+    List<String> selectedPlatforms, ProgramObject programObject) {
+  for (CommandObject commandObject in programObject.commands) {
+    if (selectedPlatforms.contains(commandObject.platform)) {
+      runCommand(commandObject.command);
+    }
+  }
+}
+
+void runCommand(String command) {
+  List<String> commands = command.split(" ");
+  print(commands);
+  Process.run(commands[0], commands.sublist(1, commands.length));
 }
