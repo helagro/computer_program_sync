@@ -29,7 +29,9 @@ class _CommandListItemState extends State<CommandListItem> {
         createPlatformsDropdownMenuItems(widget.platforms);
 
     textEditingController.text = command.command;
-    print("commandList" + widget.command.toString());
+    textEditingController.addListener(() {
+      command.command = textEditingController.text;
+    });
 
     return SizedBox(
       child: Row(children: [

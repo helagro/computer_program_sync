@@ -111,10 +111,7 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
   }
 
   void _addProgram() {
-    ProgramObject program = ProgramObject("New Program", [
-      CommandObject("Windows", "touch /home/h/github/localWebsites/test.txt"),
-      CommandObject("Linux", "touch /home/h/github/localWebsites/test2.txt")
-    ]);
+    ProgramObject program = ProgramObject("New Program", []);
 
     setState(() {
       programs.add(program);
@@ -149,7 +146,6 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
 void runCommands(
     List<ProgramObject> programObjects, List<String> selectedPlatforms) {
   for (ProgramObject programObject in programObjects) {
-    print(programObject.name);
     runMatchingCommandsInProgram(selectedPlatforms, programObject);
   }
 }
