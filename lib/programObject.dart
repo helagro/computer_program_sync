@@ -10,4 +10,9 @@ class CommandObject {
   String command;
 
   CommandObject(this.platform, this.command);
+
+  @override
+  String toString() {
+    return "Command: " + command + " Platform: " + platform;
+  }
 }

@@ -98,9 +98,10 @@ class _ProgramEditDialogState extends State<ProgramEditDialog> {
   }
 
   void deleteCommand(index) {
-    print(program.commands[index].platform);
+    print(program.commands[index].platform + index.toString());
     setState(() {
       program.commands.removeAt(index);
+      print(program.commands);
     });
   }
 

@@ -8,38 +8,36 @@ class CommandListItem extends StatefulWidget {
   final CommandObject command;
   final Function deleteCallback;
 
-  CommandListItem({Key key, this.platforms, this.command, this.deleteCallback})
-      : super(key: key);
+  CommandListItem(
+      {Key key, this.platforms, this.command, this.deleteCallback}) {
+    print("commandList init statefull" + command.toString());
+  }
 
   @override
-  _CommandListItemState createState() => _CommandListItemState(
-      platforms: platforms, command: command, deleteCallback: deleteCallback);
+  _CommandListItemState createState() {
+    return _CommandListItemState();
+  }
 }
 
 class _CommandListItemState extends State<CommandListItem> {
-  _CommandListItemState(
-      {List<String> platforms, this.command, this.deleteCallback}) {
-    platformsWidgets = createPlatformsDropdownMenuItems(platforms);
-    selectedItem = platforms.indexOf(command.platform);
-  }
-
-  List<DropdownMenuItem> platformsWidgets = [];
-  final CommandObject command;
-  final Function deleteCallback;
   final TextEditingController textEditingController = TextEditingController();
-  int selectedItem = 0;
 
   @override
   Widget build(BuildContext context) {
+    CommandObject command = widget.command;
+    List<DropdownMenuItem> platformsWidgets =
+        createPlatformsDropdownMenuItems(widget.platforms);
+
     textEditingController.text = command.command;
+    print("commandList" + widget.command.toString());
 
     return SizedBox(
       child: Row(children: [
         DropdownButton(
-          value: selectedItem,
+          value: widget.platforms.indexOf(command.platform),
           onChanged: (value) => {
             setState(() {
-              selectedItem = value;
+              command.platform = widget.platforms[value];
             })
           },
           items: platformsWidgets,
@@ -50,7 +48,7 @@ class _CommandListItemState extends State<CommandListItem> {
         ActionButton(
           icon: Icons.delete,
           toolTip: "Delete command",
-          onPressed: deleteCallback,
+          onPressed: widget.deleteCallback,
         )
       ]),
       height: 60,
