@@ -102,16 +102,12 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
   Widget _listItemFactory(ProgramObject programObject) {
     return FlatButton(
       onPressed: () {
-        ProgramObject program = ProgramObject("Test", [
-          CommandObject(
-              "Windows", "touch /home/h/github/localWebsites/test.txt"),
-          CommandObject("Linux", "touch /home/h/github/localWebsites/test2.txt")
-        ]);
         showDialog(
             context: context,
             builder: (BuildContext buildContext) => ProgramEditDialog(
-                  program: program,
+                  program: programObject,
                   platforms: allAddedPlatforms,
+                  editCallback: refreshPrograms,
                 ));
       },
       child: Text(programObject.name),
@@ -119,11 +115,14 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
     );
   }
 
+  void refreshPrograms() {
+    setState(() {});
+  }
+
   void _addItem() {
     setState(() {
       //programs.add("I am added from btn");
     });
-    //Process.run('touch', ['/home/h/github/localWebsites/hi.txt']);
   }
 
   void addNewPlatform(String platformName) {
@@ -153,8 +152,8 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
 
 void runCommands(
     List<ProgramObject> programObjects, List<String> selectedPlatforms) {
-  print("hi" + programObjects.length.toString());
   for (ProgramObject programObject in programObjects) {
+    print(programObject.name);
     runMatchingCommandsInProgram(selectedPlatforms, programObject);
   }
 }

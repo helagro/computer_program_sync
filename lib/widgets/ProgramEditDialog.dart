@@ -1,4 +1,5 @@
 import 'package:computer_program_sync/programObject.dart';
+import 'package:computer_program_sync/widgets/actionbutton.dart';
 import 'package:computer_program_sync/widgets/commandListItem.dart';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ class ProgramEditDialog extends StatelessWidget {
   final Function deleteCallback;
   final Function editCallback;
   final List<String> platforms;
+  final TextEditingController nameEditingController = TextEditingController();
 
   ProgramEditDialog(
       {Key key,
@@ -19,6 +21,8 @@ class ProgramEditDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    nameEditingController.text = program.name;
+
     return AlertDialog(
       title: Text("Edit program"),
       actions: [
@@ -26,10 +30,18 @@ class ProgramEditDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              child: TextField(),
-              height: 60,
-              width: 400,
+            Row(
+              children: [
+                SizedBox(
+                  child: TextField(controller: nameEditingController),
+                  height: 60,
+                  width: 400,
+                ),
+                ActionButton(
+                    icon: Icons.save,
+                    toolTip: "Save",
+                    onPressed: () => onSaveBtn(context))
+              ],
             ),
             SizedBox(
               child: ListView.builder(
@@ -47,5 +59,12 @@ class ProgramEditDialog extends StatelessWidget {
         )
       ],
     );
+  }
+
+  void onSaveBtn(BuildContext context) {
+    program.name = nameEditingController.text;
+    print(program.name);
+    Navigator.pop(context);
+    editCallback();
   }
 }
