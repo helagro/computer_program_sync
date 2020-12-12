@@ -21,14 +21,7 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
   final List<String> visiblePlatforms = <String>[];
   final List<ProgramObject> programs = <ProgramObject>[];
 
-  _ProgramListerScreenState() {
-    ProgramObject program = ProgramObject("TestProgram", [
-      CommandObject("Windows", "touch /home/h/github/localWebsites/test.txt"),
-      CommandObject("Linux", "touch /home/h/github/localWebsites/test2.txt")
-    ]);
-
-    programs.add(program);
-  }
+  _ProgramListerScreenState() {}
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +52,12 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
                         return TagWidget(
                             text: visiblePlatforms[index],
                             index: index,
-                            removeBtnCallback: removePlatformFromSelection);
+                            removeBtnCallback: _removePlatformFromSelection);
                       })),
               DropdownButton(
                 items: mFactory
                     .createPlatformsDropdownMenuItems(allAddedPlatforms),
-                onChanged: (value) => handleAddNewPlatformToSelection(value),
+                onChanged: (value) => _handleAddNewPlatformToSelection(value),
               ),
               ActionButton(
                 icon: Icons.add,
@@ -73,7 +66,7 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
                   showDialog(
                       context: context,
                       builder: (BuildContext buildContext) =>
-                          TextInputDialog(onDone: addNewPlatform));
+                          TextInputDialog(onDone: _addNewPlatform));
                 },
               )
             ],
@@ -94,7 +87,7 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add program',
         child: Icon(Icons.add),
-        onPressed: _addItem,
+        onPressed: _addProgram,
       ),
     );
   }
@@ -119,19 +112,24 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
     setState(() {});
   }
 
-  void _addItem() {
+  void _addProgram() {
+    ProgramObject program = ProgramObject("New Program", [
+      CommandObject("Windows", "touch /home/h/github/localWebsites/test.txt"),
+      CommandObject("Linux", "touch /home/h/github/localWebsites/test2.txt")
+    ]);
+
     setState(() {
-      //programs.add("I am added from btn");
+      programs.add(program);
     });
   }
 
-  void addNewPlatform(String platformName) {
+  void _addNewPlatform(String platformName) {
     setState(() {
       allAddedPlatforms.add(platformName);
     });
   }
 
-  void handleAddNewPlatformToSelection(int index) {
+  void _handleAddNewPlatformToSelection(int index) {
     String platform = allAddedPlatforms[index];
     if (visiblePlatforms.contains(platform)) {
       print(visiblePlatforms);
@@ -143,7 +141,7 @@ class _ProgramListerScreenState extends State<ProgramListerScreen> {
     });
   }
 
-  void removePlatformFromSelection(int index) {
+  void _removePlatformFromSelection(int index) {
     setState(() {
       visiblePlatforms.removeAt(index);
     });
