@@ -4,12 +4,11 @@ import 'package:computer_program_sync/widgets/commandListItem.dart';
 
 import 'package:flutter/material.dart';
 
-class ProgramEditDialog extends StatelessWidget {
+class ProgramEditDialog extends StatefulWidget {
+  final List<String> platforms;
   final ProgramObject program;
   final Function deleteCallback;
   final Function editCallback;
-  final List<String> platforms;
-  final TextEditingController nameEditingController = TextEditingController();
 
   ProgramEditDialog(
       {Key key,
@@ -18,6 +17,27 @@ class ProgramEditDialog extends StatelessWidget {
       this.deleteCallback,
       @required this.platforms})
       : super(key: key);
+
+  @override
+  _ProgramEditDialogState createState() => _ProgramEditDialogState(
+        program: program,
+        platforms: platforms,
+        editCallback: editCallback,
+      );
+}
+
+class _ProgramEditDialogState extends State<ProgramEditDialog> {
+  final ProgramObject program;
+  final Function deleteCallback;
+  final Function editCallback;
+  final List<String> platforms;
+  final TextEditingController nameEditingController = TextEditingController();
+
+  _ProgramEditDialogState(
+      {@required this.program,
+      this.editCallback,
+      this.deleteCallback,
+      @required this.platforms});
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +64,24 @@ class ProgramEditDialog extends StatelessWidget {
               ],
             ),
             SizedBox(
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: program.commands.length,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext buildContext, int index) {
-                    return CommandListItem(
-                        platforms: platforms, command: program.commands[index]);
-                  }),
+              child: Column(children: [
+                ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: program.commands.length,
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext buildContext, int index) {
+                      return CommandListItem(
+                        platforms: platforms,
+                        command: program.commands[index],
+                        deleteCallback: () => deleteCommand(index),
+                      );
+                    }),
+                ActionButton(
+                  icon: Icons.add,
+                  toolTip: "Add command",
+                  onPressed: addCommand,
+                )
+              ]),
               height: 400,
               width: 400,
             )
@@ -61,9 +91,21 @@ class ProgramEditDialog extends StatelessWidget {
     );
   }
 
+  void addCommand() {
+    setState(() {
+      program.commands.add(CommandObject(platforms[0], ""));
+    });
+  }
+
+  void deleteCommand(index) {
+    print(program.commands[index].platform);
+    setState(() {
+      program.commands.removeAt(index);
+    });
+  }
+
   void onSaveBtn(BuildContext context) {
     program.name = nameEditingController.text;
-    print(program.name);
     Navigator.pop(context);
     editCallback();
   }
